@@ -84,5 +84,5 @@ Navigate to http://localhost:7860 to use the Gradio interface.
 - Startups without in-house legal counsel
 
 ## 📄 License
-This project is licensed under the [MIT License].
+This project is licensed under the [MIT License](https://github.com/arghads9177/legal-mate-ai/blob/master/LICENSE).
 
