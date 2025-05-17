@@ -1,0 +1,104 @@
+from crewai import Agent, Crew, Process, Task
+from crewai.project import CrewBase, agent, crew, task
+from crewai.agents.agent_builder.base_agent import BaseAgent
+from typing import List
+from dotenv import load_dotenv
+# If you want to run a snippet of code before or after the crew starts,
+# you can use the @before_kickoff and @after_kickoff decorators
+# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+
+# Load environment variables from .env file
+load_dotenv()
+
+@CrewBase
+class LegalMateAi():
+    """LegalMateAi crew"""
+
+    # 
+    agents_config = "config/agents.yaml"
+    tasks_config = "config/tasks.yaml"
+
+    # Learn more about YAML configuration files here:
+    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
+    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
+    
+    # If you would like to add tools to your agents, you can learn more about it here:
+    # https://docs.crewai.com/concepts/agents#agent-tools
+    @agent
+    def clause_extractor(self) -> Agent:
+        agent= Agent(
+            config=self.agents_config['clause_extractor'], # type: ignore[index]
+            verbose=True
+        )
+        # agent.llm = llm
+        return agent
+
+    @agent
+    def risk_analyzer(self) -> Agent:
+        agent= Agent(
+            config=self.agents_config['risk_analyzer'], # type: ignore[index]
+            verbose=True
+        )
+        # agent.llm = llm
+        return agent
+    @agent
+    def simplifier(self) -> Agent:
+        agent = Agent(
+            config = self.agents_config['simplifier'],
+            verbose= True
+        )
+        # agent.llm = llm
+        return agent
+    @agent
+    def summary_writer(self) -> Agent:
+        agent = Agent(
+            config= self.agents_config['summary_writer'],
+            verbose= True
+        )
+        # agent.llm = llm
+        return agent
+
+    # To learn more about structured task outputs,
+    # task dependencies, and task callbacks, check out the documentation:
+    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+    @task
+    def extract_clause_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['extract_clause_task'], # type: ignore[index]
+            agent= self.clause_extractor()
+        )
+
+    @task
+    def risk_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['risk_analysis_task'], # type: ignore[index]
+            agent = self.risk_analyzer()
+        )
+
+    @task
+    def simplify_task(self) -> Task:
+        return Task(
+            config= self.tasks_config['simplify_task'],
+            agent = self.simplifier()
+        )
+    
+    @task
+    def summary_task(self) -> Task:
+        return Task(
+            config = self.tasks_config['summary_task'],
+            agent = self.summary_writer()
+        )
+
+    @crew
+    def crew(self) -> Crew:
+        """Creates the LegalMateAi crew"""
+        # To learn how to add knowledge sources to your crew, check out the documentation:
+        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
+
+        return Crew(
+            agents=self.agents, # Automatically created by the @agent decorator
+            tasks=self.tasks, # Automatically created by the @task decorator
+            process=Process.sequential,
+            verbose=True,
+            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+        )
