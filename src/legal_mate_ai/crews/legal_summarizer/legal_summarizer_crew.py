@@ -14,7 +14,9 @@ load_dotenv()
 class LegalMateAi():
     """LegalMateAi crew"""
 
-    # 
+    agents: List[BaseAgent]
+    tasks: List[Task]
+    # This is the path to the YAML configuration files for the agents and tasks
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
@@ -37,7 +39,8 @@ class LegalMateAi():
     def risk_analyzer(self) -> Agent:
         agent= Agent(
             config=self.agents_config['risk_analyzer'], # type: ignore[index]
-            verbose=True
+            verbose=True,
+            allow_delegation=True,
         )
         # agent.llm = llm
         return agent
@@ -45,7 +48,8 @@ class LegalMateAi():
     def simplifier(self) -> Agent:
         agent = Agent(
             config = self.agents_config['simplifier'],
-            verbose= True
+            verbose= True,
+            allow_delegation= True,
         )
         # agent.llm = llm
         return agent
@@ -65,28 +69,24 @@ class LegalMateAi():
     def extract_clause_task(self) -> Task:
         return Task(
             config=self.tasks_config['extract_clause_task'], # type: ignore[index]
-            agent= self.clause_extractor()
         )
 
     @task
     def risk_analysis_task(self) -> Task:
         return Task(
             config=self.tasks_config['risk_analysis_task'], # type: ignore[index]
-            agent = self.risk_analyzer()
         )
 
     @task
     def simplify_task(self) -> Task:
         return Task(
             config= self.tasks_config['simplify_task'],
-            agent = self.simplifier()
         )
     
     @task
     def summary_task(self) -> Task:
         return Task(
             config = self.tasks_config['summary_task'],
-            agent = self.summary_writer()
         )
 
     @crew

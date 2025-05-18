@@ -1,0 +1,26 @@
+validate_contract_text:
+  description: >
+    Analyze the {contract_text} to determine whether it qualifies as a valid legal contract.
+
+      A valid contract generally contains:
+        - Parties involved (names, roles)
+        - Clear scope of services or obligations
+        - Specific terms and conditions
+        - Signature lines or authorizing statements
+        - Payment terms, dispute resolution clauses, and governing law
+  expected_output: >
+    Respond strictly with a JSON object in the following format:
+
+      {
+        "is_valid": true
+      }
+
+      or
+
+      {
+        "is_valid": false
+      }
+
+      Do not provide any other commentary or explanation in the output. Just return the JSON object. Don't include ```
+  agent: >
+    legal_text_validator

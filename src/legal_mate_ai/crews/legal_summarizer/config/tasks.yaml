@@ -1,0 +1,28 @@
+extract_clause_task:
+  description: >
+    Extract key legal clauses from the contract text: Parties involved, Terms and Conditions, Termination, Liability, Confidentiality, Governing Law, etc.
+  expected_output: >
+    A structured JSON with clause names and their corresponding text
+  agent: clause_extractor
+
+risk_analysis_task:
+  description: >
+    Analyze the extracted clauses and flag any clauses that may pose legal, financial, or operational risks.
+  expected_output: >
+    A list of flagged clauses with risk levels (High/Medium/Low) and a brief explanation of the risks associated with each clause.
+  agent: risk_analyzer
+
+simplify_task:
+  description: >
+    Simplify each extracted clause into plain English that a non-lawyer can understand.
+  expected_output: >
+    Plain English versions of each key clause and the flagged risks, ensuring clarity and simplicity.
+  agent: simplifier
+
+summary_task:
+  description: >
+    Generate a brief summary of the contract based on the extracted clauses, risks, and simplified text.
+  expected_output: >
+    3–5 paragraph summary describing the nature of the contract, parties involved, its risks, and key takeaways. 
+    Summary shuld be concise and professional and in markdown format excluding ```
+  agent: summary_writer

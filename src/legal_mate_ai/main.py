@@ -9,7 +9,7 @@ import docx2txt
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 sys.path.append("src/legal_mate_ai")
-from run_crew import summarize
+from run_flow import kickoff
 
 # This main file is intended to be a way for you to run your
 # crew locally, so refrain from adding unnecessary logic into this file.
@@ -66,7 +66,7 @@ def summarize_contract(contract_text):
         )
 
     try:
-        result = summarize(contract_text)
+        result = kickoff(contract_text)
         return (
             gr.update(value=result, visible=True),  # output_md
             gr.update(visible=False),               # spinner
